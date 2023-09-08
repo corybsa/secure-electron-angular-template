@@ -14,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'custom-xp-curve'`, () => {
+  it(`should have as title 'secure-electron-angular-template'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('custom-xp-curve');
+    expect(app.title).toEqual('secure-electron-angular-template');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('custom-xp-curve app is running!');
+    expect(compiled.querySelector('.content span')?.textContent).toContain('secure-electron-angular-template app is running!');
   });
 });
