@@ -138,7 +138,7 @@ $secure-electron-angular-dark-theme: mat.define-dark-theme((
   )
 ));
 
-.darkMode {
+.dark-mode {
   @include mat.all-component-colors($secure-electron-angular-dark-theme);
 }
 

@@ -19,5 +19,16 @@ export const appMenu = Menu.buildFromTemplate([
       { type: 'separator' },
       { label: 'Select All', accelerator: 'CmdOrCtrl+A', role: 'selectAll' },
     ]
-  }
+  },
+  {
+    label: 'View',
+    submenu: [
+      { label: 'Toggle Dark Mode', accelerator: 'CmdOrCtrl+D', click: toggleDarkMode },
+    ]
+  },
 ]);
+
+function toggleDarkMode(menuItem: Electron.MenuItem, browserWindow: Electron.BrowserWindow | undefined, event: Electron.KeyboardEvent) {
+  // send message to renderer process
+  browserWindow?.webContents.send('toggle-dark-mode');
+}
