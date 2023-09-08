@@ -8,7 +8,7 @@ docs/
 ```
 
 #### src
-Contains everything for your Angular app. All of your js/css files will go here.
+Contains everything for your Angular app. All of your ts/scss files will go here.
 
 #### electron
 Contains all of the electron-specific code. All of the code that configures Electron goes here. This also contains some config files for the Electron side of the app.
