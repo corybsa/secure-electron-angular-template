@@ -21,13 +21,13 @@ export class AppComponent implements AfterContentInit {
   }
 
   toggleDarkMode(): void {
-    const darkMode = window.localStorage.getItem(this.darkModeKey) === 'off' ? 'on' : 'off';
+    const darkMode = (window.localStorage.getItem(this.darkModeKey) ?? 'off') === 'off' ? 'on' : 'off';
     window.localStorage.setItem(this.darkModeKey, darkMode);
     this.applyDarkMode(darkMode);
   }
 
   applyDarkMode(darkMode?: string): string {
-    darkMode = darkMode || (window.localStorage.getItem(this.darkModeKey) ?? 'on');
+    darkMode = darkMode || (window.localStorage.getItem(this.darkModeKey) ?? 'off');
 
     if(darkMode === 'on') {
       document.querySelector('body')?.classList.add('dark-mode');
