@@ -64,5 +64,28 @@ Built-in to this template are a number of popular frameworks already wired up to
 ## Architecture
 For a more detailed view of the architecture of the template, please check out [here](https://github.com/corybsa/secure-electron-angular-template/blob/main/docs/architecture.md). I would _highly_ recommend reading this document to get yourself familiarized with this template.
 
+## Things you might want to customize
+### angular.json
+- Replace any instances of `secure-electron-angular-template` with the name of your app
+
+### package.json
+- Change `name` to your app's name
+- Change `author.name` to your name
+- Change `description` to your app's description
+- Change `build.appId` to your app's name
+- Change `build.productName` to your app's name
+- Change `build.executableName` to your app's name
+- Change `build.mac.category` to your app's category (idk what this is, I don't develop for mac)
+
+### electron/protocol.ts
+- The `DIST_PATH` MUST match the name in `angular.json`
+- The `scheme` in `electron/protocol`
+
+### Angular files
+- Change the `<title>` of your app in `src/index.html`
+- Change instances of `$secure-electron-angular` to your app's name in `src/assets/styles/theme.scss` if you care. This is just the name of the theme, so it doesn't really matter.
+- Change the `title` of your app in `src/app/app.component.ts`
+- The contents of `src/app/app.component.html`
+
 ## FAQ
 **NEW TO ELECTRON?** Please visit [reZach's page](https://github.com/reZach/secure-electron-template/blob/master/docs/newtoelectron.md).
