@@ -1,6 +1,7 @@
 /*
 Reasonably Secure Electron
 Copyright (C) 2021  Bishop Fox
+Converted to TypeScript by: Cory Sandlin
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -15,9 +16,10 @@ Implementing a custom protocol achieves two goals:
 import * as fs from 'fs';
 import * as path from 'path';
 
-const DIST_PATH = path.join(__dirname, 'custom-xp-curve');
-const scheme = 'wg';
+const DIST_PATH = path.join(__dirname, 'secure-electron-angular-template');
+export const scheme = 'app';
 
+// Map of file extensions to mime types
 const mimeTypes: { [key: string]: string } = {
   '.js': 'text/javascript',
   '.mjs': 'text/javascript',
@@ -32,19 +34,34 @@ const mimeTypes: { [key: string]: string } = {
   '.map': 'text/plain'
 };
 
+/**
+ * Returns the charset for a given mime extension
+ * @param mimeExt the file extension to get the charset for
+ * @returns the charset for the given mime extension or null if none is found
+ */
 function charset(mimeExt: string) {
-  return ['.html', '.htm', '.js', '.mjs'].some((m) => m === mimeExt) ?
+  return ['.html', '.htm', '.js', '.mjs', 'css'].some((m) => m === mimeExt) ?
     'utf-8' :
     null;
 }
 
+/**
+ * Returns mime type and extension for a given filename
+ * @param filename name of file to get mime type for
+ * @returns object containing mime type and mime extension
+ */
 function mime(filename: string) {
   const mimeExt = path.extname(`${filename || ''}`).toLowerCase();
   const mimeType = mimeTypes[mimeExt];
   return mimeType ? { mimeExt, mimeType } : { mimeExt: null, mimeType: null };
 }
 
-function requestHandler(req: Request) {
+/**
+ * Handles requests for the custom protocol
+ * @param req The request object
+ * @returns A response object with the content type set based on the file extension
+ */
+export function requestHandler(req: Request) {
   const reqUrl = new URL(req.url);
   let reqPath = path.normalize(reqUrl.pathname);
   
@@ -62,8 +79,3 @@ function requestHandler(req: Request) {
     headers: { 'Content-Type': contentType },
   });
 }
-
-export default {
-  scheme,
-  requestHandler
-};
