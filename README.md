@@ -3,7 +3,7 @@
 A current electron app template configured for use with Angular, designed and built with security in mind. (If you are curious about what makes an electron app secure, please check out [this page](https://github.com/reZach/secure-electron-template/blob/master/docs/secureapps.md)).
 
 ## How to get started
-To get started, clone the repository by clicking the [![Use this template](https://github.com/reZach/secure-electron-template/blob/master/docs/imgs/usethistemplate.png "Use this template")](https://github.com/reZach/secure-electron-template/generate) button, or through the command line (`git clone https://github.com/reZach/secure-electron-template.git`). 
+To get started, clone the repository by clicking the [![Use this template](https://github.com/reZach/secure-electron-template/blob/master/docs/imgs/usethistemplate.png "Use this template")](https://github.com/reZach/secure-electron-template/generate) button, or through the command line (`git clone https://github.com/corybsa/secure-electron-angular-template.git`). 
 
 Once cloned, install the dependencies for the repo by running the following commands (you do _not_ have to run the first command if your command line is already inside the newly cloned repository):
 
