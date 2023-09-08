@@ -9,7 +9,7 @@ declare const window: IWindow;
 export class ElectronService {
   constructor() { }
 
-  public async formatSeparators(path: string): Promise<string> {
+  private async formatSeparators(path: string): Promise<string> {
     return await window.electronApi.invoke('format-separators', path);
   }
 
