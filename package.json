@@ -8,13 +8,12 @@
   "description": "Secure Electron Angular template",
   "scripts": {
     "ng": "ng",
-    "start": "npm run electron",
+    "start": "npm run build && electron ./build/main.js",
+    "start-prod": "npm run build-prod && electron ./build/main.js",
     "build": "ng build && npm run build-electron",
     "build-prod": "ng build -c production && npm run build-electron-prod",
     "build-electron": "tsc -p tsconfig.electron.json",
     "build-electron-prod": "tsc -p tsconfig.electron.prod.json && move .\\build\\config\\environment.prod.js .\\build\\config\\environment.js",
-    "electron": "ng build && npm run build-electron && electron ./build/main.js",
-    "electron-prod": "ng build -c production && npm run build-electron-prod && electron ./build/main.js",
     "package": "npm run build-prod && electron-builder && rmdir /s /q .\\dist\\win-unpacked",
     "postinstall": "electron-builder install-app-deps"
   },
