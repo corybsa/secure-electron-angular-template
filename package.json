@@ -14,7 +14,7 @@
     "build-prod": "ng build -c production && npm run build-electron-prod",
     "build-electron": "tsc -p tsconfig.electron.json",
     "build-electron-prod": "tsc -p tsconfig.electron.prod.json && move .\\build\\config\\environment.prod.js .\\build\\config\\environment.js",
-    "package": "npm run build-prod && electron-builder && rmdir /s /q .\\dist\\win-unpacked",
+    "package": "npm run build-prod && electron-builder",
     "postinstall": "electron-builder install-app-deps"
   },
   "build": {
