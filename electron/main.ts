@@ -4,7 +4,7 @@ import * as url from 'url';
 import { IpcEvents } from './ipc-events';
 import { environment } from './config/environment';
 import { appMenu } from './config/menu';
-import { default as Protocol } from './protocol';
+import * as Protocol from './protocol';
 
 let mainWindow: Electron.BrowserWindow | null;
 
@@ -105,7 +105,7 @@ app.on('web-contents-created', (_, contents) => {
 function loadApp() {
   if(!environment.production) {
     mainWindow!.loadURL(url.format({
-      pathname: path.join(__dirname, 'custom-xp-curve', 'index.html'),
+      pathname: path.join(__dirname, 'secure-electron-angular-template', 'index.html'),
       protocol: 'file:',
       slashes: true,
     }));
@@ -143,7 +143,7 @@ function protectWebViews(
   webPreferences.nodeIntegration = false;
 
   // Verify URL being loaded
-  if(!params['src'].startsWith('wg://rse')) {
+  if(!params['src'].startsWith(`${Protocol.scheme}//rse`)) {
     event.preventDefault();
   }
 }
@@ -151,7 +151,7 @@ function protectWebViews(
 function protectNavigations(event: Electron.Event<Electron.WebContentsWillNavigateEventParams>, navigationUrl: string) {
   const parsedUrl = new URL(navigationUrl);
 
-  if (parsedUrl.origin !== 'wg://rse') {
+  if (parsedUrl.origin !== `${Protocol.scheme}//rse`) {
     event.preventDefault();
   }
 }
