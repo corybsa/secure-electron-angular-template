@@ -46,5 +46,5 @@ contextBridge.exposeInMainWorld(
         ipcRenderer.on(channel, (event, ...args) => func(...args));
       }
     }
-  }
+  } as IWindowBridge['electronApi']
 );
