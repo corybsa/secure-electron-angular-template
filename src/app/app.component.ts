@@ -27,7 +27,7 @@ export class AppComponent implements AfterContentInit {
   }
 
   applyDarkMode(darkMode?: string): string {
-    darkMode = darkMode || (window.localStorage.getItem(this.darkModeKey) ?? 'off');
+    darkMode = darkMode || (window.localStorage.getItem(this.darkModeKey) ?? 'on');
 
     if(darkMode === 'on') {
       document.querySelector('body')?.classList.add('dark-mode');
