@@ -1,0 +1,13 @@
+@use "sass:color";
+
+$primary-color: #3f51b5;
+$accent-color: #8434ab;
+$warn-color: #bc002c;
+
+$primary-color-disabled: color.change($primary-color, $alpha: 0.73);
+$background-color: white;
+
+$breakpoint-mobile: 480px;
+$breakpoint-tablet: 768px;
+$breakpoint-laptop: 1024px;
+$breakpoint-desktop: 1200px;

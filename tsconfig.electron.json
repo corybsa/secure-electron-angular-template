@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "outDir": "./build",
+    "types": [],
+    "target": "ES5",
+    "importHelpers": false,
+    "sourceMap": false,
+  },
+  "include": [
+    "electron/**/*.ts"
+  ],
+  "exclude": [
+    "electron/config/environment.prod.ts"
+  ]
+}
