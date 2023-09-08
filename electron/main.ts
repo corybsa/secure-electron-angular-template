@@ -25,7 +25,7 @@ async function createWindow() {
     width: 1200,
     height: 800,
     webPreferences: {
-      devTools: true, // TODO: !environment.production,
+      devTools: !environment.production,
       contextIsolation: true,
       webSecurity: true,
       allowRunningInsecureContent: false,
@@ -41,7 +41,6 @@ async function createWindow() {
   if(!environment.production) {
     mainWindow!.webContents.openDevTools();
   }
-  mainWindow!.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
