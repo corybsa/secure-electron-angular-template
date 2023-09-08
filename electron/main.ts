@@ -104,7 +104,7 @@ app.on('web-contents-created', (_, contents) => {
 function loadApp() {
   if(!environment.production) {
     mainWindow!.loadURL(url.format({
-      pathname: path.join(__dirname, 'secure-electron-angular-template', 'index.html'),
+      pathname: path.join(Protocol.DIST_PATH, 'index.html'),
       protocol: 'file:',
       slashes: true,
     }));
