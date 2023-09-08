@@ -7,7 +7,6 @@
   },
   "description": "Secure Electron Angular template",
   "scripts": {
-    "ng": "ng",
     "start": "npm run build && electron ./build/main.js",
     "start-prod": "npm run build-prod && electron ./build/main.js",
     "build": "ng build && npm run build-electron",
