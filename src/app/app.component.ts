@@ -1,5 +1,6 @@
 import { AfterContentInit, Component, OnInit } from '@angular/core';
 import { IWindow } from 'electron/preload';
+import { ElectronListenerService } from './services/electron/electron-listener.service';
 
 declare const window: IWindow;
 
@@ -12,10 +13,12 @@ export class AppComponent implements AfterContentInit {
   title = 'secure-electron-angular-template';
   private readonly darkModeKey = 'darkMode';
 
-  constructor() {}
+  constructor(
+    public electronListenerService: ElectronListenerService
+  ) {}
 
   ngAfterContentInit(): void {
-    window.electronApi.receive('toggle-dark-mode', this.toggleDarkMode.bind(this));
+    this.electronListenerService.onDarkModeToggled(this.toggleDarkMode.bind(this));
 
     this.applyDarkMode();
   }
