@@ -13,8 +13,17 @@ export class ElectronService {
     return await window.electronApi.invoke('format-separators', path);
   }
 
-  public async openFileChooser(defaultPath: string): Promise<string[]> {
-    defaultPath = await this.formatSeparators(defaultPath);
+  private async getHomeDir(): Promise<string> {
+    return await window.electronApi.invoke('get-home-folder');
+  }
+
+  public async openFileChooser(defaultPath?: string): Promise<string[]> {
+    if(defaultPath) {
+      defaultPath = await this.formatSeparators(defaultPath);
+    } else {
+      defaultPath = await this.getHomeDir();
+    }
+
     return await window.electronApi.invoke('open-file-chooser', { defaultPath });
   }
 

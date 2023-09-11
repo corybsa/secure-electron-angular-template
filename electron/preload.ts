@@ -8,6 +8,7 @@ export const ipcRendererToMainMessages = {
   writeFile: 'write-file',
   createDirectory: 'create-directory',
   deleteFile: 'delete-file',
+  getHomeFolder: 'get-home-folder'
 } as const;
 
 export const ipcMainToRendererMessages = {

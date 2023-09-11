@@ -2,6 +2,7 @@ import { ipcMain, dialog } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as Protocol from './protocol';
+import * as os from 'os';
 
 export class IpcEvents {
   mainWindow: Electron.BrowserWindow | null;
@@ -64,6 +65,11 @@ export class IpcEvents {
       } catch {
         return false;
       }
+    });
+
+    // Get the user's home folder
+    ipcMain.handle('get-home-folder', (event, args) => {
+      return os.homedir();
     });
   }
 
