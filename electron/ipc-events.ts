@@ -18,7 +18,7 @@ export class IpcEvents {
   init() {
     // Open native file chooser dialog
     ipcMain.handle('open-file-chooser', async (event, args) => {
-      return dialog.showOpenDialogSync(this.mainWindow!, { ...args, properties: ['openDirectory'] });
+      return dialog.showOpenDialogSync(this.mainWindow!, { ...args });
     });
     
     // Format path separators to be correct on the current OS
