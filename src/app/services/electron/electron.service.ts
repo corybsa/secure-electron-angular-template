@@ -17,14 +17,18 @@ export class ElectronService {
     return await window.electronApi.invoke('get-home-folder');
   }
 
-  public async openFileChooser(defaultPath?: string): Promise<string[]> {
+  public async openFileChooser(defaultPath?: string, properties: string[] = []): Promise<string[]> {
     if(defaultPath) {
       defaultPath = await this.formatSeparators(defaultPath);
     } else {
       defaultPath = await this.getHomeDir();
     }
 
-    return await window.electronApi.invoke('open-file-chooser', { defaultPath });
+    return await window.electronApi.invoke('open-file-chooser', { defaultPath, properties });
+  }
+
+  public async openDirectoryChooser(defaultPath?: string): Promise<string[]> {
+    return await this.openFileChooser(defaultPath, ['openDirectory']);
   }
 
   public async checkFileExists(path: string): Promise<boolean> {
