@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { OpenDialogOptions } from 'electron';
 import { IWindow } from 'electron/preload';
 
 declare const window: IWindow;
@@ -17,18 +18,19 @@ export class ElectronService {
     return await window.electronApi.invoke('get-home-folder');
   }
 
-  public async openFileChooser(defaultPath?: string, properties: string[] = []): Promise<string[]> {
-    if(defaultPath) {
-      defaultPath = await this.formatSeparators(defaultPath);
+  public async openFileChooser(options: OpenDialogOptions): Promise<string[]> {
+    if(options.defaultPath) {
+      options.defaultPath = await this.formatSeparators(options.defaultPath);
     } else {
-      defaultPath = await this.getHomeDir();
+      options.defaultPath = await this.getHomeDir();
     }
 
-    return await window.electronApi.invoke('open-file-chooser', { defaultPath, properties });
+    return await window.electronApi.invoke('open-file-chooser', options);
   }
 
-  public async openDirectoryChooser(defaultPath?: string): Promise<string[]> {
-    return await this.openFileChooser(defaultPath, ['openDirectory']);
+  public async openDirectoryChooser(options: OpenDialogOptions): Promise<string[]> {
+    options.properties = [...(options.properties ?? []), 'openDirectory'];
+    return await this.openFileChooser(options);
   }
 
   public async checkFileExists(path: string): Promise<boolean> {
