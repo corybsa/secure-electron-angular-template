@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as Protocol from './protocol';
 import * as os from 'os';
+import { IpcRendererToMainMessage } from './preload';
 
 export class IpcEvents {
   mainWindow: Electron.BrowserWindow | null;
@@ -17,28 +18,28 @@ export class IpcEvents {
    */
   init() {
     // Open native file chooser dialog
-    ipcMain.handle('open-file-chooser', async (event, args) => {
+    this.createHandler('open-file-chooser', async (event, args) => {
       return dialog.showOpenDialogSync(this.mainWindow!, { ...args });
     });
     
     // Format path separators to be correct on the current OS
-    ipcMain.handle('format-separators', (event, args) => {
+    this.createHandler('format-separators', (event, args) => {
       const formattedPath = path.join(...args.split('/'));
       return formattedPath;
     });
 
     // Get the path separator for the current OS
-    ipcMain.handle('get-separator', (event, args) => {
+    this.createHandler('get-separator', (event, args) => {
       return path.sep;
     });
 
     // Check if a file exists on the disk
-    ipcMain.handle('check-file-exists', (event, args) => {
+    this.createHandler('check-file-exists', (event, args) => {
       return fs.existsSync(args);
     });
 
     // Write a file to the disk
-    ipcMain.handle('write-file', (event, args) => {
+    this.createHandler('write-file', (event, args) => {
       try {
         fs.writeFileSync(args.path, args.payload);
         return true;
@@ -48,7 +49,7 @@ export class IpcEvents {
     });
 
     // Create a directory (folder) on the disk
-    ipcMain.handle('create-directory', (event, args) => {
+    this.createHandler('create-directory', (event, args) => {
       try {
         fs.mkdirSync(args, { recursive: true });
         return true;
@@ -58,7 +59,7 @@ export class IpcEvents {
     });
 
     // Delete a file from the disk
-    ipcMain.handle('delete-file', (event, args) => {
+    this.createHandler('delete-file', (event, args) => {
       try {
         fs.unlinkSync(args);
         return true;
@@ -68,9 +69,18 @@ export class IpcEvents {
     });
 
     // Get the user's home folder
-    ipcMain.handle('get-home-folder', (event, args) => {
+    this.createHandler('get-home-folder', (event, args) => {
       return os.homedir();
     });
+  }
+
+  /**
+   * Creates a handler for a specific channel.
+   * @param channel
+   * @param callback 
+   */
+  private createHandler(channel: IpcRendererToMainMessage, callback: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any): void {
+    ipcMain.handle(channel, callback);
   }
 
   /**

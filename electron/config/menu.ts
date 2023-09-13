@@ -1,4 +1,13 @@
 import { Menu } from "electron";
+import { IpcMainToRendererMessage } from '../preload';
+
+interface IWebContents extends Electron.WebContents {
+  send(channel: IpcMainToRendererMessage, ...args: any[]): void;
+}
+
+interface IBrowserWindow extends Electron.BrowserWindow {
+  webContents: IWebContents;
+}
 
 export const appMenu = Menu.buildFromTemplate([
   {
@@ -28,7 +37,7 @@ export const appMenu = Menu.buildFromTemplate([
   },
 ]);
 
-function toggleDarkMode(menuItem: Electron.MenuItem, browserWindow: Electron.BrowserWindow | undefined, event: Electron.KeyboardEvent) {
+function toggleDarkMode(menuItem: Electron.MenuItem, browserWindow: IBrowserWindow | undefined, event: Electron.KeyboardEvent) {
   // send message to renderer process
   browserWindow?.webContents.send('toggle-dark-mode');
 }

@@ -17,8 +17,8 @@ export const ipcMainToRendererMessages = {
 
 const validRendererToMainMessages = Object.values(ipcRendererToMainMessages);
 const validMainToRendererMessages = Object.values(ipcMainToRendererMessages);
-type IpcRendererToMainMessage = typeof validRendererToMainMessages[0];
-type IpcMainToRendererMessage = typeof validMainToRendererMessages[0];
+export type IpcRendererToMainMessage = typeof validRendererToMainMessages[0];
+export type IpcMainToRendererMessage = typeof validMainToRendererMessages[0];
 
 interface IWindowBridge {
   electronApi: {
