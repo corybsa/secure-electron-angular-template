@@ -1,6 +1,7 @@
 import { app, BrowserWindow, Menu, protocol, session } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import * as fs from 'fs';
 import { IpcEvents } from './ipc-events';
 import { environment } from './config/environment';
 import { appMenu } from './config/menu';
@@ -24,6 +25,7 @@ async function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    
     webPreferences: {
       devTools: !environment.production,
       contextIsolation: true,
@@ -34,16 +36,14 @@ async function createWindow() {
     }
   });
 
+  mainWindow.maximize();
+
   // and load the index.html of the app.
   loadApp();
 
   // Open the DevTools.
   if(!environment.production) {
-    mainWindow.webContents.once('dom-ready', async () => {
-      const reduxPath = path.join(process.env['LOCALAPPDATA']!, '/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/3.1.3_0');
-      await session.defaultSession.loadExtension(reduxPath, { allowFileAccess: true });
-      mainWindow!.webContents.openDevTools();
-    });
+    mainWindow.webContents.once('dom-ready', installRedux);
   }
 
   // Emitted when the window is closed.
@@ -138,7 +138,7 @@ function protectWebViews(
   event: { preventDefault: () => void; readonly defaultPrevented: boolean; },
   webPreferences: Electron.WebPreferences,
   params: Record<string, string>
-) {
+): void {
   // Strip away preload scripts if unused or verify their location is legitimate
   delete webPreferences.preload;
 
@@ -151,10 +151,65 @@ function protectWebViews(
   }
 }
 
-function protectNavigations(event: Electron.Event<Electron.WebContentsWillNavigateEventParams>, navigationUrl: string) {
+function protectNavigations(event: Electron.Event<Electron.WebContentsWillNavigateEventParams>, navigationUrl: string): void {
   const parsedUrl = new URL(navigationUrl);
 
   if (parsedUrl.origin !== `${Protocol.scheme}//rse`) {
     event.preventDefault();
+  }
+}
+
+async function installRedux(): Promise<void> {
+  try {
+    // check windows first
+    let reduxPath = path.join(process.env['LOCALAPPDATA']!, '/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd');
+
+    // check mac
+    if(!fs.existsSync(reduxPath)) {
+      reduxPath = path.join(process.env['HOME']!, '/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd');
+    }
+
+    // check linux
+    if(!fs.existsSync(reduxPath)) {
+      const possiblePaths = [
+        path.join(process.env['HOME']!, '/.config/google-chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd'),
+        path.join(process.env['HOME']!, '/.config/google-chrome-beta/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd'),
+        path.join(process.env['HOME']!, '/.config/google-chrome-canary/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd'),
+        path.join(process.env['HOME']!, '/.config/chromium/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd'),
+      ];
+
+      // check possible paths until we find one that exists
+      for(const p of possiblePaths) {
+        if(fs.existsSync(p)) {
+          reduxPath = p;
+          break;
+        }
+      }
+    }
+
+    // redux devtools isn't installed
+    if(!fs.existsSync(reduxPath)) {
+      throw new Error('Redux DevTools not installed');
+    }
+
+    // find the newest folder in the Chrome extensions directory
+    const newestVersion = fs.readdirSync(reduxPath).reduce((prev, curr) => {
+      if(fs.statSync(path.join(reduxPath, curr)).isDirectory() && curr > prev) {
+        return curr;
+      } else {
+        return prev;
+      }
+    }, '');
+
+    reduxPath = path.join(reduxPath, newestVersion);
+    console.log(`loading Redux DevTools from ${reduxPath}`);
+    await session.defaultSession.loadExtension(reduxPath, { allowFileAccess: true });
+  } catch(e) {
+    console.log('Redux DevTools failed to load', e);
+  } finally {
+    mainWindow!.webContents.openDevTools();
+    // for some reason the first time the devtools are opened,
+    // redux devtools doesn't load properly. a refresh fixes it.
+    mainWindow!.reload();
   }
 }
