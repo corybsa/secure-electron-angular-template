@@ -49,6 +49,7 @@ Taken from the [best-practices](https://electronjs.org/docs/tutorial/security) o
 15. [Do not use shell.openExternal with untrusted content](https://www.electronjs.org/docs/latest/tutorial/security#15-do-not-use-shellopenexternal-with-untrusted-content) - ✅
 16. [Use a current version of Electron](https://www.electronjs.org/docs/latest/tutorial/security#16-use-a-current-version-of-electron) - ✅
 17. [Validate the sender of all IPC messages](https://www.electronjs.org/docs/latest/tutorial/security#17-validate-the-sender-of-all-ipc-messages) - ✅
+18. [Some built-in utility functions to help you out](https://github.com/corybsa/secure-electron-angular-template/blob/main/electron/ipc-events.ts) - ✅
 
 ## Included frameworks
 Built-in to this template are a number of popular frameworks already wired up to get you on the road running.
