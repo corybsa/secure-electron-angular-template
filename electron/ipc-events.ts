@@ -1,4 +1,4 @@
-import { ipcMain, dialog } from 'electron';
+import { ipcMain, dialog, shell, OpenDialogOptions } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as Protocol from './protocol';
@@ -18,12 +18,12 @@ export class IpcEvents {
    */
   init() {
     // Open native file chooser dialog
-    this.createHandler('open-file-chooser', async (event, args) => {
+    this.createHandler('open-file-chooser', async (event, args: OpenDialogOptions) => {
       return dialog.showOpenDialogSync(this.mainWindow!, { ...args });
     });
     
     // Format path separators to be correct on the current OS
-    this.createHandler('format-separators', (event, args) => {
+    this.createHandler('format-separators', (event, args: string) => {
       const formattedPath = path.join(...args.split('/'));
       return formattedPath;
     });
@@ -34,12 +34,12 @@ export class IpcEvents {
     });
 
     // Check if a file exists on the disk
-    this.createHandler('check-file-exists', (event, args) => {
+    this.createHandler('check-file-exists', (event, args: string) => {
       return fs.existsSync(args);
     });
 
     // Write a file to the disk
-    this.createHandler('write-file', (event, args) => {
+    this.createHandler('write-file', (event, args: { path: string, payload: string }) => {
       try {
         fs.writeFileSync(args.path, args.payload);
         return true;
@@ -49,7 +49,7 @@ export class IpcEvents {
     });
 
     // Create a directory (folder) on the disk
-    this.createHandler('create-directory', (event, args) => {
+    this.createHandler('create-directory', (event, args: string) => {
       try {
         fs.mkdirSync(args, { recursive: true });
         return true;
@@ -59,7 +59,7 @@ export class IpcEvents {
     });
 
     // Delete a file from the disk
-    this.createHandler('delete-file', (event, args) => {
+    this.createHandler('delete-file', (event, args: string) => {
       try {
         fs.unlinkSync(args);
         return true;
@@ -71,6 +71,32 @@ export class IpcEvents {
     // Get the user's home folder
     this.createHandler('get-home-folder', (event, args) => {
       return os.homedir();
+    });
+
+    // Open a folder in the OS's file explorer
+    this.createHandler('open-folder', (event, args: string) => {
+      try {
+        shell.showItemInFolder(args);
+        return true;
+      } catch {
+        return false;
+      }
+    });
+
+    // Read file contents
+    this.createHandler('read-file', (event, args: string) => {
+      try {
+        const fileExists = fs.existsSync(args);
+
+        if(!fileExists) {
+          return '';
+        }
+
+        const file = fs.readFileSync(args);
+        return file.toString();
+      } catch {
+        return '';
+      }
     });
   }
 
