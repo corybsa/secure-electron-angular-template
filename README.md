@@ -59,6 +59,7 @@ Built-in to this template are a number of popular frameworks already wired up to
 - [Angular Material](https://material.angular.io/) (with custom theme, including dark mode)
 - [Typescript](https://www.typescriptlang.org)
 - [NgRx](https://ngrx.io/)
+- [Redux DevTools](https://github.com/reduxjs/redux-devtools)
 - [Electron builder](https://www.electron.build/) (for packaging up your app)
 - [Jasmine](https://jasmine.github.io/)
 
