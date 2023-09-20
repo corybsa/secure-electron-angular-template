@@ -202,7 +202,7 @@ async function installRedux(): Promise<void> {
     }, '');
 
     reduxPath = path.join(reduxPath, newestVersion);
-    await session.defaultSession.loadExtension(reduxPath, { allowFileAccess: true });
+    await session.defaultSession.loadExtension(reduxPath);
   } catch(e) {
     console.log('Redux DevTools failed to load', e);
   } finally {
