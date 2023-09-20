@@ -39,7 +39,11 @@ async function createWindow() {
 
   // Open the DevTools.
   if(!environment.production) {
-    mainWindow!.webContents.openDevTools();
+    mainWindow.webContents.once('dom-ready', async () => {
+      const reduxPath = path.join(process.env['LOCALAPPDATA']!, '/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/3.1.3_0');
+      await session.defaultSession.loadExtension(reduxPath, { allowFileAccess: true });
+      mainWindow!.webContents.openDevTools();
+    });
   }
 
   // Emitted when the window is closed.
