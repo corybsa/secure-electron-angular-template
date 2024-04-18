@@ -80,7 +80,7 @@ For a more detailed view of the architecture of the template, please check out [
 - Change `build.mac.category` to your app's category (idk what this is, I don't develop for mac)
 
 ### electron/protocol.ts
-- The `DIST_PATH` MUST match the name in `angular.json`
+- The `DIST_PATH` MUST match the `name` in `angular.json`
 - The `scheme` in `electron/protocol`
 
 ### Angular files

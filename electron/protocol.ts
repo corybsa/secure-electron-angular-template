@@ -16,7 +16,7 @@ Implementing a custom protocol achieves two goals:
 import * as fs from 'fs';
 import * as path from 'path';
 
-// TODO: match this with the value in angular.json
+// TODO: must match this with the value of `name` in angular.json
 export const DIST_PATH = path.join(__dirname, 'secure-electron-angular-template');
 
 // TODO: (optional) change this to something unique to your app
