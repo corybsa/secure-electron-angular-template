@@ -13,6 +13,10 @@ async function createWindow() {
   configureCsp();
 
   new IpcEvents(mainWindow).init();
+  // Tell Electron to not build the default menu, this should help with startup performance
+  Menu.setApplicationMenu(null);
+
+  // Create the Application's main menu
   Menu.setApplicationMenu(appMenu);
 
   if (environment.production) {
