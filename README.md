@@ -85,7 +85,7 @@ For a more detailed view of the architecture of the template, please check out [
 
 ### Angular files
 - Change the `<title>` of your app in `src/index.html`
-- Change instances of `$secure-electron-angular` to your app's name in `src/assets/styles/theme.scss` if you care. This is just the name of the theme, so it doesn't really matter.
+- Change instances of `$secure-electron-angular` to your app's name in `src/assets/styles/theme.scss` if you care. This is just the name of the theme in code and is not user-facing, so it doesn't *really* matter.
 - Change the `title` of your app in `src/app/app.component.ts`
 - The contents of `src/app/app.component.html`
 
