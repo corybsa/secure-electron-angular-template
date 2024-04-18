@@ -18,7 +18,7 @@ import { AppEffects } from './app.effects';
     StoreModule.forRoot(reducers, {
       metaReducers
     }),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true}),
     EffectsModule.forRoot([AppEffects]),
   ],
   providers: [],
