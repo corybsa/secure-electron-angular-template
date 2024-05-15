@@ -13,6 +13,7 @@ async function createWindow() {
   configureCsp();
 
   new IpcEvents(mainWindow).init();
+
   // Tell Electron to not build the default menu, this should help with startup performance
   Menu.setApplicationMenu(null);
 
@@ -165,21 +166,27 @@ function protectNavigations(event: Electron.Event<Electron.WebContentsWillNaviga
 
 async function installRedux(): Promise<void> {
   try {
+    let reduxPath: string = '';
+
     // check windows first
-    let reduxPath = path.join(process.env['LOCALAPPDATA']!, '/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd');
+    if(process.env['LOCALAPPDATA']) {
+      reduxPath = path.join(process.env['LOCALAPPDATA'], '/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd');
+    }
 
     // check mac
-    if(!fs.existsSync(reduxPath)) {
-      reduxPath = path.join(process.env['HOME']!, '/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd');
+    if(!fs.existsSync(reduxPath) && process.env['HOME']) {
+      reduxPath = path.join(process.env['HOME'], '/Library/Application Support/Google/Chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd');
     }
 
     // check linux
-    if(!fs.existsSync(reduxPath)) {
+    if(!fs.existsSync(reduxPath) && process.env['HOME']) {
       const possiblePaths = [
-        path.join(process.env['HOME']!, '/.config/google-chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd'),
-        path.join(process.env['HOME']!, '/.config/google-chrome-beta/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd'),
-        path.join(process.env['HOME']!, '/.config/google-chrome-canary/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd'),
-        path.join(process.env['HOME']!, '/.config/chromium/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd'),
+        path.join(process.env['HOME'], '/.config/google-chrome/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd'),
+        path.join(process.env['HOME'], '/.config/google-chrome-beta/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd'),
+        path.join(process.env['HOME'], '/.config/google-chrome-canary/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd'),
+        path.join(process.env['HOME'], '/.config/chromium/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd'),
+        // check for brave browser
+        path.join(process.env['HOME'], '/.config/BraveSoftware/Brave-Browser/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd'),
       ];
 
       // check possible paths until we find one that exists
@@ -208,7 +215,7 @@ async function installRedux(): Promise<void> {
     reduxPath = path.join(reduxPath, newestVersion);
     await session.defaultSession.loadExtension(reduxPath);
   } catch(e) {
-    console.log('Redux DevTools failed to load', e);
+    console.error('Redux DevTools failed to load', e);
   } finally {
     mainWindow!.webContents.openDevTools();
     // for some reason the first time the devtools are opened,
