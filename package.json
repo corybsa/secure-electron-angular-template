@@ -3,16 +3,17 @@
   "version": "1.0.0",
   "main": "./build/main.js",
   "author": {
-    "name": "Your name here"
+    "name": "Your name here",
+    "email": "email@example.com"
   },
   "description": "Secure Electron Angular template",
   "scripts": {
-    "start": "npm run build && electron ./build/main.js",
+    "start": "npm run build && electron ./build/main.js --enable-logging --enable-features=ConversionMeasurement,AttributionReportingCrossAppWeb --no-sandbox",
     "start-prod": "npm run build-prod && electron ./build/main.js",
     "build": "ng build && npm run build-electron",
     "build-prod": "ng build -c production && npm run build-electron-prod",
     "build-electron": "tsc -p tsconfig.electron.json",
-    "build-electron-prod": "tsc -p tsconfig.electron.prod.json && move .\\build\\config\\environment.prod.js .\\build\\config\\environment.js",
+    "build-electron-prod": "tsc -p tsconfig.electron.prod.json && shx mv ./build/config/environment.prod.js ./build/config/environment.js",
     "package": "npm run build-prod && electron-builder",
     "postinstall": "electron-builder install-app-deps"
   },
@@ -26,7 +27,8 @@
         "rpm",
         "snap",
         "AppImage"
-      ]
+      ],
+      "category": "Utility"
     },
     "mac": {
       "category": "your.app.category.type"
@@ -71,6 +73,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "shx": "^0.3.4",
     "typescript": "~5.4.5"
   }
 }
