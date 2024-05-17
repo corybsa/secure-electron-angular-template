@@ -10,7 +10,11 @@ import * as Protocol from './protocol';
 let mainWindow: Electron.BrowserWindow | null;
 
 async function createWindow() {
-  configureCsp();
+  // Configuring csp on Linux causes a crash on start up :(
+  // A backup CSP is defined in index.html as a meta tag
+  if(process.platform !== 'linux') {
+    configureCsp();
+  }
 
   new IpcEvents(mainWindow).init();
 
@@ -125,17 +129,19 @@ function loadApp() {
 // Configure CSP to mitigate XSS attacks
 function configureCsp() {
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    callback({ responseHeaders: Object.assign({
-      ...details.responseHeaders,
-      'Content-Security-Policy': [
-        `default-src 'self';
-        script-src 'self' 'unsafe-inline';
-        img-src 'self' data:;
-        font-src 'self' https://fonts.gstatic.com;
-        style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
-        style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com;`
-      ]
-    }, details.responseHeaders) });
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': [
+          `default-src 'self';
+          script-src 'self' 'unsafe-inline';
+          img-src 'self' data:;
+          font-src 'self' https://fonts.gstatic.com;
+          style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+          style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com;`
+        ]
+      }
+    })
   });
 }
 
