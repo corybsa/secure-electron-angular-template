@@ -8,8 +8,8 @@
   },
   "description": "Secure Electron Angular template",
   "scripts": {
-    "start": "npm run build && electron ./build/main.js --enable-logging --enable-features=ConversionMeasurement,AttributionReportingCrossAppWeb --no-sandbox",
-    "start-prod": "npm run build-prod && electron ./build/main.js",
+    "start": "npm run build && electron ./build/main.js --enable-logging --trace-warnings",
+    "start-prod": "npm run build-prod && electron ./build/main.js --enable-logging --trace-warnings",
     "build": "ng build && npm run build-electron",
     "build-prod": "ng build -c production && npm run build-electron-prod",
     "build-electron": "tsc -p tsconfig.electron.json",
