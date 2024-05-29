@@ -18,13 +18,19 @@ export class IpcEvents {
    */
   init() {
     // Open native file chooser dialog
-    this.createHandler('open-file-chooser', async (event, args: OpenDialogOptions) => {
+    this.createHandler('open-file-chooser', (event, args: OpenDialogOptions) => {
       return dialog.showOpenDialogSync(this.mainWindow!, { ...args });
     });
     
     // Format path separators to be correct on the current OS
     this.createHandler('format-separators', (event, args: string) => {
-      const formattedPath = path.join(...args.split('/'));
+      const isRoot = args[0] === '/';
+      let formattedPath = path.join(...args.split('/'));
+
+      if(isRoot) {
+        formattedPath = `/${formattedPath}`;
+      }
+
       return formattedPath;
     });
 
@@ -39,9 +45,9 @@ export class IpcEvents {
     });
 
     // Write a file to the disk
-    this.createHandler('write-file', (event, args: { path: string, payload: string }) => {
+    this.createHandler('write-file', async (event, args: { path: string, payload: string }) => {
       try {
-        fs.writeFileSync(args.path, args.payload);
+        await fs.promises.writeFile(args.path, args.payload);
         return true;
       } catch {
         return false;
@@ -49,9 +55,9 @@ export class IpcEvents {
     });
 
     // Create a directory (folder) on the disk
-    this.createHandler('create-directory', (event, args: string) => {
+    this.createHandler('create-directory', async (event, args: string) => {
       try {
-        fs.mkdirSync(args, { recursive: true });
+        await fs.promises.mkdir(args, { recursive: true });
         return true;
       } catch {
         return false;
@@ -59,9 +65,9 @@ export class IpcEvents {
     });
 
     // Delete a file from the disk
-    this.createHandler('delete-file', (event, args: string) => {
+    this.createHandler('delete-file', async (event, args: string) => {
       try {
-        fs.unlinkSync(args);
+        await fs.promises.unlink(args);
         return true;
       } catch {
         return false;
@@ -84,15 +90,9 @@ export class IpcEvents {
     });
 
     // Read file contents
-    this.createHandler('read-file', (event, args: string) => {
+    this.createHandler('read-file', async (event, args: string) => {
       try {
-        const fileExists = fs.existsSync(args);
-
-        if(!fileExists) {
-          return '';
-        }
-
-        const file = fs.readFileSync(args);
+        const file = await fs.promises.readFile(args);
         return file.toString();
       } catch {
         return '';
